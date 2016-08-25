@@ -1,4 +1,4 @@
-##概述
+,##概述
 当app升级时，不可避免的数据库可能会有所改变。比如新增一张表、改变某张表中的字段名、添加一个新的字段等一系列表结构的改变。按照现在来说，解决的方法只有两个：
 1. 卸载当前版本，安装最新版的；
 2. 更新数据库；
@@ -34,9 +34,10 @@ sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + tempTableName);
 sqLiteDatabase.setTransactionSuccessful();
 sqLiteDatabase.setVersion(2);
 ```
-###相关类
 **SQLiteOpenHelperWrap.java**
-getWritableDatabase()的时候才会创建数据库
+getWritableDatabase()的时候才会创建数据库；
+databaseName创建的数据库名，version当前的版本；
+version的值控制着是否走onUpgrade方法。假定初始数据库版本为1，如果传入的版本为2则会走onUpgrade方法，更新数据库表结构；
 ```java
 private final static int version = DatabaseScript.DATABASE_HIGH_VERSION;
 
@@ -57,7 +58,6 @@ public void onUpgrade(SQLiteDatabase sqLiteDatabase, int oldVersion, int newVers
     Log.i(TAG, "升级数据库 旧数据库版本:" + oldVersion + ";" + "新数据库版本：" + newVersion);
 }
 ```
-databaseName创建的数据库名，version当前的版本；假定初始数据库版本为1，如果传入的版本为2则会走onUpgrade方法，更新数据库表结构。具体代码详见案例
 ##效果图
 ###高低版本如何切换
 1. SQLiteOpenHelperWrap.java29、30行做相应改变
